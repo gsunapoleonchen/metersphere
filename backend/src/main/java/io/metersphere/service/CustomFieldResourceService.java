@@ -71,8 +71,7 @@ public class CustomFieldResourceService {
         if (CollectionUtils.isNotEmpty(addFields)) {
             this.checkInit();
             addFields.forEach(field -> {
-                field.setResourceId(resourceId);
-                extCustomFieldResourceMapper.insert(tableName, field);
+                createOrUpdateFields(tableName, resourceId, field);
             });
         }
     }
@@ -81,9 +80,18 @@ public class CustomFieldResourceService {
         if (CollectionUtils.isNotEmpty(editFields)) {
             this.checkInit();
             editFields.forEach(field -> {
-                field.setResourceId(resourceId);
-                extCustomFieldResourceMapper.updateByPrimaryKeySelective(tableName, field);
+                createOrUpdateFields(tableName, resourceId, field);
             });
+        }
+    }
+
+    private void createOrUpdateFields(String tableName, String resourceId, CustomFieldResource field) {
+        long count = extCustomFieldResourceMapper.countFieldResource(tableName, resourceId, field.getFieldId());
+        field.setResourceId(resourceId);
+        if (count > 0) {
+            extCustomFieldResourceMapper.updateByPrimaryKeySelective(tableName, field);
+        } else {
+            extCustomFieldResourceMapper.insert(tableName, field);
         }
     }
 

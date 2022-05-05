@@ -59,6 +59,7 @@ public class CustomFieldService {
         customField.setCreateTime(System.currentTimeMillis());
         customField.setUpdateTime(System.currentTimeMillis());
         customField.setGlobal(false);
+        customField.setThirdPart(false);
         customField.setCreateUser(SessionUtils.getUserId());
         customFieldMapper.insert(customField);
         return customField.getId();
@@ -233,7 +234,7 @@ public class CustomFieldService {
     public Map<String, CustomField> getNameMapByProjectId(String projectId) {
         return this.getByProjectId(projectId)
                 .stream()
-                .collect(Collectors.toMap(i -> i.getName() + i.getScene(), i -> i));
+                .collect(Collectors.toMap(i -> i.getName() + i.getScene(), i -> i, (val1, val2) -> val1));
     }
 
     public Map<String, CustomField> getGlobalNameMapByProjectId() {
