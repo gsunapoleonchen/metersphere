@@ -14,6 +14,7 @@ import io.metersphere.commons.constants.IssuesManagePlatform;
 import io.metersphere.commons.constants.TemplateConstants;
 import io.metersphere.commons.exception.MSException;
 import io.metersphere.commons.utils.LogUtil;
+import io.metersphere.commons.utils.ServiceUtils;
 import io.metersphere.controller.request.customfield.CustomFieldResourceRequest;
 import io.metersphere.dto.CustomFieldDao;
 import io.metersphere.dto.CustomFieldItemDTO;
@@ -82,6 +83,26 @@ public class CustomFieldResourceService {
             editFields.forEach(field -> {
                 createOrUpdateFields(tableName, resourceId, field);
             });
+        }
+    }
+
+    protected void batchEditFields(String tableName, String resourceId, List<CustomFieldResource> fields) {
+        if (CollectionUtils.isNotEmpty(fields)) {
+            this.checkInit();
+            SqlSession sqlSession = ServiceUtils.getBatchSqlSession();
+            ExtCustomFieldResourceMapper batchMapper = sqlSession.getMapper(ExtCustomFieldResourceMapper.class);
+            for (CustomFieldResource field : fields) {
+                long count = extCustomFieldResourceMapper.countFieldResource(tableName, resourceId, field.getFieldId());
+                if (count > 0) {
+                    batchMapper.updateByPrimaryKeySelective(tableName, field);
+                } else {
+                    batchMapper.insert(tableName, field);
+                }
+            }
+            sqlSession.flushStatements();
+            if (sqlSession != null && sqlSessionFactory != null) {
+                SqlSessionUtils.closeSqlSession(sqlSession, sqlSessionFactory);
+            }
         }
     }
 

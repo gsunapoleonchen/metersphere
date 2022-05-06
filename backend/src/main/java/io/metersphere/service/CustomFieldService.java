@@ -8,6 +8,7 @@ import com.github.pagehelper.PageHelper;
 import io.metersphere.base.domain.CustomField;
 import io.metersphere.base.domain.CustomFieldExample;
 import io.metersphere.base.domain.CustomFieldTemplate;
+import io.metersphere.base.domain.ext.CustomFieldResource;
 import io.metersphere.base.mapper.CustomFieldMapper;
 import io.metersphere.base.mapper.ext.ExtCustomFieldMapper;
 import io.metersphere.commons.constants.TemplateConstants;
@@ -220,6 +221,15 @@ public class CustomFieldService {
         if (StringUtils.isNotBlank(customFieldsStr)) {
             if (JSONObject.parse(customFieldsStr) instanceof JSONArray) {
                 return JSONArray.parseArray(customFieldsStr, CustomFieldItemDTO.class);
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<CustomFieldResource> getCustomFieldResource(String customFieldsStr) {
+        if (StringUtils.isNotBlank(customFieldsStr)) {
+            if (JSONObject.parse(customFieldsStr) instanceof JSONArray) {
+                return JSONArray.parseArray(customFieldsStr, CustomFieldResource.class);
             }
         }
         return new ArrayList<>();

@@ -70,7 +70,7 @@ public abstract class AbstractIssuePlatform implements IssuesPlatform {
     protected String userId;
     protected String defaultCustomFields;
     protected boolean isThirdPartTemplate;
-
+    protected CustomFieldIssuesService customFieldIssuesService;
 
     public String getKey() {
         return key;
@@ -114,6 +114,7 @@ public abstract class AbstractIssuePlatform implements IssuesPlatform {
         this.extIssuesMapper = CommonBeanFactory.getBean(ExtIssuesMapper.class);
         this.resourceService = CommonBeanFactory.getBean(ResourceService.class);
         this.testCaseIssueService = CommonBeanFactory.getBean(TestCaseIssueService.class);
+        this.customFieldIssuesService = CommonBeanFactory.getBean(CustomFieldIssuesService.class);
         this.restTemplateIgnoreSSL = restTemplate;
     }
 
